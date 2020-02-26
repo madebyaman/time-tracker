@@ -19,6 +19,10 @@ const Blocks = ({ categories, setCategories, updateCategory }) => {
             categories={categories}
             setCategories={setCategories}
             updateCategory={updateCategory}
+            time={{
+              from: i * 15,
+              to: (i + 1) * 15
+            }}
           />
         ))}
       </div>

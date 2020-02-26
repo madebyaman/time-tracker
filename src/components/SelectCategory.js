@@ -6,7 +6,8 @@ const SelectCategory = ({
   selectedCategory,
   setSelectedCategory,
   hideComponent,
-  updateCategory
+  updateCategory,
+  time
 }) => {
   const [input, setInput] = useState("");
   const [matchedCategories, setMatchedCategories] = useState([]);
@@ -63,18 +64,23 @@ const SelectCategory = ({
   const handleCategoryClick = category => {
     hideComponent(false);
     if (selectedCategory !== null) {
-      updateCategory(selectedCategory.id, -1);
-      updateCategory(category.id, +1);
+      updateCategory(selectedCategory.id, -1, time);
+      updateCategory(category.id, +1, time);
       setSelectedCategory(category);
     } else {
       setSelectedCategory(category);
-      updateCategory(category.id, +1);
+      updateCategory(category.id, +1, time);
     }
   };
 
   return (
     <div>
-      <input type="text" value={input} onChange={e => showOnChange(e)} />
+      <input
+        type="text"
+        value={input}
+        onChange={e => showOnChange(e)}
+        autoFocus={true}
+      />
       <ul className="matched-categories">
         {matchedCategories.map(category => {
           return (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import SelectCategory from "./SelectCategory";
+import moment from "moment";
 
 function useComponentVisible(initialIsVisible) {
   const [isComponentVisible, setIsComponentVisible] = useState(
@@ -21,13 +22,34 @@ function useComponentVisible(initialIsVisible) {
   });
   return { ref, isComponentVisible, setIsComponentVisible };
 }
-const Block = ({ categories, setCategories, updateCategory }) => {
+const Block = ({ categories, setCategories, updateCategory, time }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const {
     ref,
     isComponentVisible,
     setIsComponentVisible
   } = useComponentVisible(false);
+
+  useEffect(() => {
+    // Here I need to get the time of this block and check if any category has been defined here
+    const date = moment().format("ll");
+    categories.filter(category => {
+      if (category && category.hasOwnProperty("blocks")) {
+        if (category.blocks && category.blocks.hasOwnProperty(date)) {
+          if (
+            category.blocks[`${date}`] &&
+            category.blocks[`${date}`].hasOwnProperty("slots")
+          ) {
+            category.blocks[date].slots.filter(slot => {
+              if (slot.from === time.from) {
+                setSelectedCategory(category);
+              }
+            });
+          }
+        }
+      }
+    });
+  }, [categories, time]);
 
   const showCategory = () => {
     if (selectedCategory !== null) {
@@ -55,6 +77,7 @@ const Block = ({ categories, setCategories, updateCategory }) => {
             setSelectedCategory={setSelectedCategory}
             hideComponent={setIsComponentVisible}
             updateCategory={updateCategory}
+            time={time}
           />
         </div>
       ) : (
